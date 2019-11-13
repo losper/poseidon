@@ -39,6 +39,6 @@
 		"@passoa/pack": "latest",
 		"@passoa/serialport": "latest",
 		"@passoa/websocket": "latest",
-		"mongoose": "5.6.9"
+		"mongoose": "5.7.10"
 	}
 }
