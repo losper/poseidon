@@ -1,4 +1,3 @@
-import * as pack from '@passoa/pack';
 import * as childprs from 'child_process';
 import * as path from 'path';
 import * as fs from 'fs';
@@ -62,7 +61,7 @@ export class Web_mgr {
 						obj.info.version +
 						'/." ' +
 						obj.info.path;
-					let push_ret: any = await this.pushByADB(cmd, true, 30000);
+					let push_ret: any = await this.pushByADB(cmd, true, 45000);
 					if (!push_ret.ret) obj.info = false;
 					else {
 						let ret_shell: any = await this.pushByADB('shell', false, 3000);
