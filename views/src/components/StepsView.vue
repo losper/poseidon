@@ -281,9 +281,12 @@
           </span>
         </el-option>
       </el-select>
+
       <el-select
         placeholder="请选择"
         filterable
+        allow-create
+        default-first-option
         clearable
         size="small"
         style="width:155px"
@@ -293,6 +296,12 @@
       >
         <el-option v-for="val in Values" :key="val.val" :label="val.title" :value="val.val"></el-option>
       </el-select>
+      <el-button
+        type="success"
+        size="small"
+        v-if="s_action=='dbc'&&checkValType()"
+        @click="OnsetDbcNumber"
+      >设置</el-button>
       <div v-if="s_action=='dbc'&&!checkValType()&&s_clid!=''">
         <span>
           <font size="2">{{ showSignalRange() }}</font>
@@ -305,6 +314,7 @@
         ></el-input-number>
         <el-button type="success" size="small" @click="onSet">设置</el-button>
       </div>
+
       <Checkbox v-model="s_skip" v-show="s_action=='click'">不判断</Checkbox>
       <el-input-number
         v-model="s_wait"
@@ -351,7 +361,7 @@ export default class StepsView extends Vue {
     id: ""
   };
   private s_val: any = "";
-  private s_num: Number = 0;
+  private s_num: number = 0;
   private Values: any;
   get clearInfo() {
     if (this.$store.state.case_info.showflag) {
@@ -521,11 +531,12 @@ export default class StepsView extends Vue {
               val: this.s_val,
               title: this.getDdcVal(this.s_val)
             };
-            if (this.s_op == 0) this.steplist.push(vobj);
-            else if (this.s_op == 2) this.steplist[this.s_idx] = vobj;
+            if (this.s_op == 2) this.steplist[this.s_idx] = vobj;
             else if (this.s_op == 3) this.steplist.splice(this.s_idx, 0, vobj);
             if (this.s_op != 0) this.initOp();
           }
+          //  if (this.s_op == 0) this.steplist.push(vobj);
+          // else
         }
         break;
       case 4:
@@ -535,6 +546,7 @@ export default class StepsView extends Vue {
         break;
     }
   }
+
   private onSet() {
     let obj;
     if (this.s_action == this.waitType) {
@@ -638,6 +650,7 @@ export default class StepsView extends Vue {
     if (clicktype == "1") return true;
     return false;
   }
+
   private showEditBtn(flag: number, idx: number) {
     if (flag) {
       this.s_idx = idx;
@@ -718,6 +731,7 @@ export default class StepsView extends Vue {
         break;
     }
   }
+
   private editLoop(type: number, item: any) {
     if (type) {
       if (item.loop != undefined) item.loop = undefined;
@@ -725,6 +739,35 @@ export default class StepsView extends Vue {
       item.loop = this.s_loop;
     }
     this.initOp();
+  }
+
+  private GetDbcTitle(idx: number) {
+    for (let i = 0; i < this.Values.length; i++) {
+      if (this.Values[i].val == idx) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  private OnsetDbcNumber(idx: number) {
+    let obj;
+    if (this.GetDbcTitle(this.s_val) == false) {
+      obj = {
+        action: this.s_action,
+        module: this.s_module,
+        id: this.s_clid,
+        val: this.s_val
+      };
+    } else {
+      obj = {
+        action: this.s_action,
+        module: this.s_module,
+        id: this.s_clid,
+        val: this.getDdcVal(this.s_val)
+      };
+    }
+    if (this.s_op == 0) this.steplist.push(obj);
   }
 }
 </script>
